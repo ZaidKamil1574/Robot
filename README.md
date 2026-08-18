@@ -20,6 +20,7 @@ Press **Tab** to switch modes.
 | | Arrows, Z/X | wrist_yaw, wrist_pitch, roll |
 | Both modes | C/V | Close/open gripper |
 
+<img width="1061" height="630" alt="image" src="https://github.com/user-attachments/assets/f4f697a5-466f-438a-bb15-869b878870b5" />
 
 ## Kinematics
 
