@@ -1,16 +1,14 @@
 # da Vinci PSM Simulator (Unity + URDF + ROS)
 
-A Unity simulation of Intuitive Surgical's da Vinci **Patient-Side Manipulator (PSM)**, built from the real open-source kinematic model published by Johns Hopkins' [dVRK (da Vinci Research Kit)](https://github.com/jhu-dvrk/dvrk_model) project — not an approximate or toy model, but the actual link geometry, joint limits, and parallelogram RCM linkage from a research-grade da Vinci description.
+A Unity simulation of Intuitive Surgical's da Vinci **Patient-Side Manipulator (PSM)**, built from the real open-source kinematic model published by Johns Hopkins' [dVRK (da Vinci Research Kit)](https://github.com/jhu-dvrk/dvrk_model) project with the actual link geometry, joint limits, and parallelogram RCM linkage from a research-grade da Vinci description.
 
 The robot can be driven two ways: jogging individual joints directly, or commanding the tool tip in Cartesian space via a custom inverse-kinematics solver — the same paradigm real PSM teleoperation uses.
 
 ## Why this exists
 
-Built as a hands-on prototype to explore da Vinci-style surgical robot kinematics: the Remote-Center-of-Motion (RCM) constraint, the parallelogram linkage that keeps the instrument shaft pivoting through a fixed point in space, and the joint chain from base to gripper.
+Built as a hands on prototype to explore da Vinci-style surgical robot kinematics in Unity
 
-## Pipeline: xacro → URDF → Unity
 
-The dVRK model ships as parameterized `xacro` (not plain URDF), so it can't be imported directly. This project includes a standalone `xacro`/`rospkg` conversion path that resolves `$(find package)` substitutions without requiring a full ROS install, producing a plain `PSM1.urdf` plus the ~13 mesh files it actually references (not the full 77MB mesh library). That URDF is then imported via Unity's [URDF Importer](https://github.com/Unity-Technologies/URDF-Importer) into a live `ArticulationBody` hierarchy.
 
 ## Kinematics
 
@@ -19,12 +17,8 @@ The dVRK model ships as parameterized `xacro` (not plain URDF), so it can't be i
 - **Inverse kinematics** (`DaVinciKinematics.SolveIK`): a numerical Jacobian-transpose solver. Each step estimates a 6xN task-space Jacobian by finite differences against a *hypothetical* joint vector (no physics side effects), then gradient-descends joint values toward a Cartesian target — enforcing joint limits on every iteration, not just the final result. Runs every fixed-timestep against a continuously-moving target (resolved-rate control), which is what real teleoperated robots do rather than solving IK once per command.
 - **`<mimic>` joint reproduction**: the URDF's parallelogram linkage (`pitch_2`..`pitch_6`) and two-jaw gripper (`jaw_1`/`jaw_2`) are defined via `<mimic joint="..." multiplier="...">`. Unity's URDF Importer parses this tag but never actually drives it at runtime — this project reproduces the coupling manually by copying the master joint's drive target every fixed step.
 
-## Physics
 
-- **ArticulationBody**, not legacy `Rigidbody`+`ConfigurableJoint` — Unity's reduced-coordinate solver purpose-built for serial kinematic chains; a Rigidbody+Joint chain accumulates constraint error and destabilizes past a few links, which matters for a 10-body arm like this.
-- The root link is pinned (`immovable = true`) at the **RCM** — mechanically correct, since the real da Vinci's RCM is a fixed pivot point too, not something that should be free-falling under gravity.
-- Solver iterations bumped (30 / 10 vs. Unity's default 6 / 1) for a chain this long, plus a tighter fixed timestep (200Hz) for a precision control loop.
-- All physics-affecting writes happen in `FixedUpdate` on `Time.fixedDeltaTime`; only discrete input (mode toggle) is polled in `Update`.
+
 
 ## Controls
 
