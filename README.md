@@ -8,6 +8,17 @@ The robot can be driven two ways: jogging individual joints directly, or command
 
 Built as a hands on prototype to explore da Vinci-style surgical robot kinematics in Unity
 
+## Controls
+
+Press **Tab** to switch modes.
+
+| Mode | Keys | Behavior |
+|---|---|---|
+| Cartesian IK (default) | W/A/S/D/Q/E | Move the tool tip in world X/Y/Z; IK solves the arm |
+| | Arrows, Z/X | Wrist yaw/pitch, roll |
+| Joint Space | W/S, A/D, Q/E | insertion, yaw, pitch |
+| | Arrows, Z/X | wrist_yaw, wrist_pitch, roll |
+| Both modes | C/V | Close/open gripper |
 
 
 ## Kinematics
@@ -20,17 +31,6 @@ Built as a hands on prototype to explore da Vinci-style surgical robot kinematic
 
 
 
-## Controls
-
-Press **Tab** to switch modes.
-
-| Mode | Keys | Behavior |
-|---|---|---|
-| Cartesian IK (default) | W/A/S/D/Q/E | Move the tool tip in world X/Y/Z; IK solves the arm |
-| | Arrows, Z/X | Wrist yaw/pitch, roll |
-| Joint Space | W/S, A/D, Q/E | insertion, yaw, pitch |
-| | Arrows, Z/X | wrist_yaw, wrist_pitch, roll |
-| Both modes | C/V | Close/open gripper |
 
 ## Stack
 
